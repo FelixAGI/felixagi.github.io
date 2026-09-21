@@ -18,6 +18,11 @@ byte-identical files, totaling 2.12 GiB of logical file contents. Its QR is a
 standard version-4 symbol and independently decodes to the permanent HTTPS
 address.
 
+Start with the [capacity demo](https://felixagi.github.io/open/image/), then
+download the [native source package](https://felixagi.github.io/felixfs-source.zip),
+read the [protocol specification](FELIXFS-SPEC.md), and follow the
+[build guide](BUILD.md). The browser builder and bridge are in this repository.
+
 ## Web bridge
 
 Publish this directory at the HTTPS host used to build the Android app. A
@@ -28,9 +33,11 @@ https://HOST/open/#FX1%7C...encoded payload...
 ```
 
 The payload is in the URL fragment, so it is never included in the HTTP
-request. `.well-known/assetlinks.json` matches the included debug APK. For a
-release key, replace the fingerprint using `assetlinks.json.template`, then
-build the app with:
+request. The published `.well-known/assetlinks.json` only verifies an APK
+signed with its listed certificate. A locally built debug APK has a different
+certificate; it can still use the web page's `Open in FelixFS` handoff. For
+your own verified HTTPS links, publish your certificate fingerprint at your
+own host and build the app with:
 
 ```text
 gradle -PfelixHost=HOST -PfelixCleartext=false assembleDebug
