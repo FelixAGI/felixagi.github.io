@@ -87,13 +87,14 @@ const photoBytes = Uint8Array.from({ length: 70_277 }, () => {
   photoState = (photoState * 1664525 + 1013904223) >>> 0;
   return photoState >>> 24;
 });
-const photos = encodeVolume([1, 2, 3].map((index) => ({
+const photos = encodeVolume([1, 2, 3, 4].map((index) => ({
   name: `photo-${index}.jpg`,
   bytes: photoBytes,
 })));
-assert.equal(photos.sourceBytes, 3 * photoBytes.length);
-assert.deepEqual(photos.modes, ["literal exact", "literal exact", "literal exact"]);
+assert.equal(photos.sourceBytes, 4 * photoBytes.length);
+assert.deepEqual(photos.modes, Array(4).fill("literal exact"));
 assert.ok(photos.payload.length > 2953);
+assert.equal(Buffer.from(photos.payload.split("|")[1], "base64url").length, photos.binaryBytes);
 
 const procedural = encodeVolume([{ name: "pattern.bin", bytes: repeated }]);
 assert.equal(procedural.proceduralFiles, 1);
