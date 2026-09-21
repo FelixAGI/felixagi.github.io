@@ -1,0 +1,492 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f3f5f2">
+  <meta name="felix-phone-base" content="https://felixagi.github.io/open/">
+  <title>FelixQR | Scan a code. Open a drive.</title>
+  <link rel="stylesheet" href="style.css?v=9">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="FelixQR home">
+      <span class="brand-mark" aria-hidden="true">FQ</span>
+      <span>FelixQR</span>
+    </a>
+    <div class="topbar-actions">
+      <nav class="site-nav" aria-label="Site sections">
+        <a href="#builder" data-scroll="builder">Build</a>
+        <a href="#capacity" data-scroll="capacity">Capacity</a>
+        <a href="#felixfs" data-scroll="felixfs">FelixFS</a>
+        <a href="#mathematics" data-scroll="mathematics">Mathematics</a>
+        <a href="#architecture" data-scroll="architecture">How it works</a>
+        <a href="#verification" data-scroll="verification">Verification</a>
+      </nav>
+      <span class="bridge-state"><span aria-hidden="true"></span>FelixFS bridge</span>
+    </div>
+  </header>
+
+  <main>
+    <section class="workspace" aria-labelledby="page-title">
+      <div class="content">
+        <p class="eyebrow">A drive inside the scan</p>
+        <h1 id="page-title">Scan a code. Open a drive.</h1>
+        <p class="lede" id="status" aria-live="polite">Checking this link for FelixQR data...</p>
+
+        <div class="hero-actions">
+          <a class="button primary" href="#builder" data-scroll="builder">Build a FelixQR</a>
+          <a class="button secondary" href="image/?set=owo-1000.fqx">Open the exact image demo</a>
+          <a class="button tertiary" href="FelixFS-Android.apk" download>Get the Android app</a>
+        </div>
+
+        <dl class="metadata" id="metadata" hidden>
+          <div><dt>Type</dt><dd>FelixQR volume</dd></div>
+          <div><dt>Code size</dt><dd id="payload-size">0 bytes</dd></div>
+          <div><dt>Privacy</dt><dd>Stays on device</dd></div>
+        </dl>
+
+        <nav class="actions" id="actions" hidden aria-label="FelixQR actions">
+          <a class="button primary" id="open-app" href="">Open in FelixFS</a>
+          <a class="button secondary" href="FelixFS-Android.apk" download>Install FelixFS</a>
+          <a class="button secondary" id="download" href="">Save Felix file</a>
+        </nav>
+
+        <details class="manual" id="manual">
+          <summary>Open a FelixQR</summary>
+          <form id="payload-form">
+            <label for="payload-input">Paste a FelixQR link or code</label>
+            <textarea id="payload-input" rows="4" spellcheck="false" autocomplete="off" placeholder="Paste your FelixQR here"></textarea>
+            <div class="form-actions">
+              <button class="button secondary" type="submit">Open FelixQR</button>
+              <label class="file-button button tertiary" for="payload-file">Choose a Felix file</label>
+              <input id="payload-file" type="file" accept=".fx1,text/plain">
+            </div>
+            <p class="form-message" id="form-message" aria-live="polite"></p>
+          </form>
+        </details>
+      </div>
+
+      <figure class="carrier">
+        <div class="qr-frame">
+          <img src="felix-qr.png?v=4" width="720" height="720" alt="A standard QR code carrying a FelixQR volume link">
+        </div>
+        <figcaption>
+          <span>Standard QR link</span>
+          <span>Scan with any camera</span>
+        </figcaption>
+      </figure>
+    </section>
+
+    <section class="facts" aria-label="FelixQR capabilities">
+      <div><strong>Any camera</strong><span>Scans as an ordinary QR code</span></div>
+      <div><strong>Opens like a drive</strong><span>Browse familiar files and folders</span></div>
+      <div><strong>1 TiB file included</strong><span>Jump directly to any requested byte</span></div>
+      <div><strong>Exact when it matters</strong><span>Embedded or linked files keep every original byte</span></div>
+    </section>
+
+    <section class="builder" id="builder" aria-labelledby="builder-title">
+      <div class="section-inner">
+        <div class="section-heading builder-heading">
+          <div>
+            <p class="eyebrow">Local file manager</p>
+            <h2 id="builder-title">Turn your files into a FelixQR.</h2>
+          </div>
+          <p>Select files once and this browser remembers them. They stay on this device and are never uploaded to the website.</p>
+        </div>
+
+        <div class="local-notice"><span aria-hidden="true"></span><strong>Private by default</strong><span>Stored in your browser, processed on your device.</span></div>
+
+        <div class="builder-grid">
+          <section class="file-manager" aria-labelledby="files-title">
+            <header class="tool-header">
+              <div>
+                <p class="tool-label">Your collection</p>
+                <h3 id="files-title">Files</h3>
+              </div>
+              <div class="file-summary"><strong id="file-count">0 files</strong><span id="file-total">0 bytes</span></div>
+            </header>
+
+            <div class="manager-actions">
+              <label class="button primary" for="builder-files">Add files</label>
+              <input id="builder-files" type="file" multiple>
+              <button class="button tertiary" id="clear-files" type="button" disabled>Clear list</button>
+            </div>
+
+            <p class="files-empty" id="files-empty">No files selected yet. Add documents, images, code, or any other files you want inside the volume.</p>
+            <ul class="managed-files" id="managed-files" aria-live="polite"></ul>
+            <p class="builder-message" id="builder-message" aria-live="polite">Your saved selection will return when you reopen this page.</p>
+          </section>
+
+          <section class="builder-output" aria-labelledby="output-title">
+            <header class="tool-header">
+              <div>
+                <p class="tool-label">Local output</p>
+                <h3 id="output-title">FelixQR</h3>
+              </div>
+            </header>
+            <p class="output-intro">The exact compiler maps files into 256-byte lattice cells. Each cell chooses its smallest geometry, shares matching branches, and keeps only the corrections.</p>
+            <p class="app-requirement">Install <a href="FelixFS-Android.apk" download>FelixFS for Android</a> once, then use the Open in FelixFS action after scanning.</p>
+            <button class="button primary build-button" id="build-felixqr" type="button" disabled>Create FelixQR</button>
+
+            <div class="builder-result" id="builder-result" hidden>
+              <canvas id="built-qr" width="520" height="520" hidden aria-label="Generated FelixQR code"></canvas>
+              <p id="result-message"></p>
+              <dl>
+                <div><dt>Felix file</dt><dd id="result-size">0 bytes</dd></div>
+                <div><dt>Files</dt><dd id="result-files">0</dd></div>
+                <div><dt>Compiler</dt><dd id="result-encoding">Exact</dd></div>
+                <div><dt>Reduced</dt><dd id="result-savings">0 bytes</dd></div>
+              </dl>
+              <div class="result-actions">
+                <a class="button primary" id="open-built-app" href="">Open in FelixFS</a>
+                <a class="button secondary" id="download-built-fx1" href="">Save Felix file</a>
+                <button class="button tertiary" id="copy-built-link" type="button" hidden>Copy FelixQR link</button>
+                <a class="button secondary" id="download-built-qr" aria-disabled="true">Save QR as PNG</a>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </section>
+
+    <section class="capacity" id="capacity" aria-labelledby="capacity-title">
+      <div class="section-inner capacity-grid">
+        <div class="section-intro">
+          <p class="eyebrow">What one code can unlock</p>
+          <h2 id="capacity-title">A whole drive from one scan.</h2>
+          <p>The working FelixQR sample opens a browsable drive with files, folders, and a 1 TiB random-access file. Its complete geometric volume spans <code>2^98</code> addressable bytes.</p>
+          <a class="text-link" href="felix-sample.fx1" download>Get the working FelixQR sample</a>
+        </div>
+        <div class="capacity-readout" aria-label="FelixQR verified total addressable capacity">
+          <span class="power">2<sup>98</sup></span>
+          <span class="capacity-label">total addressable bytes</span>
+          <output>316,912,650,057,057,350,374,175,801,344</output>
+        </div>
+      </div>
+
+      <div class="section-inner pipeline" aria-label="FelixQR capacity pipeline">
+        <div>
+          <span class="step">01</span>
+          <strong>Scan it normally</strong>
+          <p>Your camera reads a standard web link. The page opens the volume in FelixFS or offers the app on a new device.</p>
+        </div>
+        <div>
+          <span class="step">02</span>
+          <strong>Open the drive</strong>
+          <p>FelixFS turns the scan into familiar files and folders you can browse immediately.</p>
+        </div>
+        <div>
+          <span class="step">03</span>
+          <strong>Go straight to the data</strong>
+          <p>FelixFS generates only the part you open, even when it is deep inside an enormous file.</p>
+        </div>
+        <div>
+          <span class="step">04</span>
+          <strong>Carry it anywhere</strong>
+          <p>The code is portable, read-only, and does not need a cloud account or full-volume download.</p>
+        </div>
+      </div>
+
+      <aside class="capacity-note section-inner">
+        <strong>Built to go further</strong>
+        <p>The working 24-dimensional sample provides the full <code>2^98</code>-byte address space shown above. FelixQR supports additional dimensions and arbitrary-precision addresses, so this proven capacity is a starting point, not the format ceiling.</p>
+      </aside>
+    </section>
+
+    <section class="volume-showcase" aria-labelledby="volume-title">
+      <div class="section-inner volume-grid">
+        <div>
+          <p class="eyebrow light">Familiar from the first click</p>
+          <h2 id="volume-title">Use it like a read-only USB drive.</h2>
+          <p>Open FelixQR and the result appears as ordinary files and folders. You can browse, seek, and read without unpacking the entire volume first.</p>
+          <ul class="feature-list">
+            <li>Jump directly to any part of a large file</li>
+            <li>Generate content only when you open it</li>
+            <li>No full-volume download or extraction</li>
+            <li>Read-only by design, so the source stays unchanged</li>
+          </ul>
+        </div>
+        <div class="file-browser" aria-label="Verified FelixFS sample directory">
+          <div class="file-browser-bar"><span></span><span>FELIX:</span><span>Read only</span></div>
+          <div class="file-row directory"><span>recursive/</span><small>directory</small></div>
+          <div class="file-row nested"><span>level-0.bin</span><small>1 MiB orbit</small></div>
+          <div class="file-row nested"><span>level-1.bin</span><small>1 MiB orbit</small></div>
+          <div class="file-row nested"><span>twenty-four-dimensions.bin</span><small>geometric</small></div>
+          <div class="file-row"><span>README.txt</span><small>literal</small></div>
+          <div class="file-row"><span>lattice.bin</span><small>1 TiB</small></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="system" id="felixfs" aria-labelledby="system-title">
+      <div class="section-inner">
+        <div class="section-heading system-heading">
+          <div>
+            <p class="eyebrow">The complete system</p>
+            <h2 id="system-title">FelixQR comes with its own filesystem.</h2>
+          </div>
+          <p>FelixQR carries the volume. FelixFS opens it, generates its contents, and presents it to your device as familiar files and folders.</p>
+        </div>
+
+        <div class="system-pair">
+          <section aria-labelledby="carrier-title">
+            <p class="system-label">The carrier</p>
+            <h3 id="carrier-title">FelixQR</h3>
+            <ul>
+              <li><strong>Ordinary camera scanning</strong><span>Uses a standard QR that existing camera apps already understand.</span></li>
+              <li><strong>Geometric file compiler</strong><span>Interweaves local cell models in a two-dimensional lattice and preserves every exception exactly.</span></li>
+              <li><strong>Complete portable volume</strong><span>Carries the filesystem description, geometry, program, metadata, and embedded files.</span></li>
+              <li><strong>Exact linked sets</strong><span>When a source exceeds QR capacity, the scan carries a short locator to one checksummed shared source.</span></li>
+              <li><strong>Damage detection</strong><span>Checks the decoded volume before FelixFS opens it.</span></li>
+              <li><strong>Angular carrier mode</strong><span>Also includes the moving-line geometry format that inspired the project.</span></li>
+            </ul>
+          </section>
+          <section aria-labelledby="filesystem-title">
+            <p class="system-label">The filesystem</p>
+            <h3 id="filesystem-title">FelixFS</h3>
+            <ul>
+              <li><strong>Files and folders</strong><span>Contains its own executable directory tree instead of relying on a separate archive format.</span></li>
+              <li><strong>Read only by design</strong><span>The mounted source cannot be accidentally changed or overwritten.</span></li>
+              <li><strong>Instant random access</strong><span>Reads any requested range without generating everything before it.</span></li>
+              <li><strong>Generated on demand</strong><span>Only the bytes an app asks for are evaluated and returned.</span></li>
+            </ul>
+          </section>
+        </div>
+
+        <div class="platform-detail" aria-label="FelixFS platform integration">
+          <article>
+            <span>Windows</span>
+            <h3>A real drive letter</h3>
+            <p>Cloud Files placeholders become folders and files. Opening one asks the FelixFS core for only the requested bytes.</p>
+          </article>
+          <article>
+            <span>Linux + macOS</span>
+            <h3>A mounted volume</h3>
+            <p>The built-in WebDAV filesystem surface supports directories, metadata, and seekable byte-range reads.</p>
+          </article>
+          <article>
+            <span>Android</span>
+            <h3>Inside the Files picker</h3>
+            <p>The FelixFS provider opens QR links, shared scans, and Felix files as a read-only storage location.</p>
+          </article>
+        </div>
+
+        <div class="included-strip" aria-label="Additional included features">
+          <span>Native Rust core</span>
+          <span>Recursive lattice</span>
+          <span>Executable Phi tree</span>
+          <span>28-operation geometry VM</span>
+          <span>Arbitrary-precision addresses</span>
+          <span>Moving-line scanner</span>
+          <span>Command-line tools</span>
+          <span>WebDAV server</span>
+          <span>C-compatible API</span>
+          <span>HTTPS app links</span>
+          <span>Android share receiver</span>
+          <span>Offline decoding</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="mathematics" id="mathematics" aria-labelledby="mathematics-title">
+      <div class="section-inner">
+        <div class="section-heading math-heading">
+          <div>
+            <p class="eyebrow">The complete derivation</p>
+            <h2 id="mathematics-title">From one address to the exact byte.</h2>
+          </div>
+          <p>FelixQR describes a deterministic byte space. Every read follows the same equations, whether the volume is four kilobytes or spans the verified <strong>2<sup>98</sup></strong> address example.</p>
+        </div>
+
+        <ol class="math-sequence">
+          <li class="math-step">
+            <span class="math-index">01</span>
+            <div class="math-copy">
+              <h3>Pack the description</h3>
+              <p>The QR carries a compact FX1 envelope. FXB1 contains the file tree, geometry, VM program, metadata, and any literal bytes needed for exact recovery.</p>
+            </div>
+            <div class="equation" aria-label="FX1 envelope equation">
+              <code>FX1 | base64url(FXB1) | crc32(FXB1)</code>
+              <small>Description size: D = |FXB1| bytes. Stored description information: 8D bits.</small>
+            </div>
+          </li>
+
+          <li class="math-step">
+            <span class="math-index">02</span>
+            <div class="math-copy">
+              <h3>Build the recursive lattice</h3>
+              <p>Each axis contributes independently to the address space. More axes or states extend the space without changing the addressing rule.</p>
+            </div>
+            <div class="equation" aria-label="Recursive lattice capacity equations">
+              <code>N = q &middot; &prod;<sub>j=0</sub><sup>d-1</sup> n<sub>j</sub></code>
+              <code>N<sub>sample</sub> = 4 &middot; 16<sup>24</sup> = 2<sup>98</sup> byte addresses</code>
+              <small>q is the channel count, d is the dimension count, and n<sub>j</sub> is the number of states on axis j. FX1 does not impose a fixed d.</small>
+            </div>
+          </li>
+
+          <li class="math-step">
+            <span class="math-index">03</span>
+            <div class="math-copy">
+              <h3>Translate address into coordinates</h3>
+              <p>Mixed-radix division turns one linear byte address into a channel and a coordinate on every axis. The inverse equation returns the same address.</p>
+            </div>
+            <div class="equation" aria-label="Mixed radix address equations">
+              <code>c = A mod q, &nbsp; p = &lfloor;A / q&rfloor;</code>
+              <code>x<sub>j</sub> = p mod n<sub>j</sub>, &nbsp; p = &lfloor;p / n<sub>j</sub>&rfloor;, &nbsp; j = d - 1 ... 0</code>
+              <code>A = q &middot; (...((x<sub>0</sub>n<sub>1</sub> + x<sub>1</sub>)n<sub>2</sub> + x<sub>2</sub>)...) + c</code>
+              <code>A<sub>lattice</sub>(y) = start + y</code>
+              <code>A<sub>orbit</sub>(y) = start + &lfloor;y / b&rfloor; &middot; stride + (y mod b)</code>
+            </div>
+          </li>
+
+          <li class="math-step">
+            <span class="math-index">04</span>
+            <div class="math-copy">
+              <h3>Express state as rotation</h3>
+              <p>A state can be represented as an angular translation. Two 16-state rotations carry the high and low nibbles of one byte.</p>
+            </div>
+            <div class="equation" aria-label="Angular translation equations">
+              <code>&theta;(s, r) = 2&pi;s / r</code>
+              <code>b = (s<sub>high</sub> &lt;&lt; 4) | s<sub>low</sub>, &nbsp; s &isin; [0, 15]</code>
+              <small>The moving-line carrier observes the state; the decoded FX1 checksum rejects a wrong observation.</small>
+            </div>
+          </li>
+
+          <li class="math-step">
+            <span class="math-index">05</span>
+            <div class="math-copy">
+              <h3>Compile files into a 2D grid</h3>
+              <p>The current web compiler divides each file into 256-byte cells. Cells are laid out row-major and become coordinates in the geometry VM.</p>
+            </div>
+            <div class="equation" aria-label="Two dimensional file lattice equations">
+              <code>cell(y) = &lfloor;y / 256&rfloor;, &nbsp; within(y) = y mod 256</code>
+              <code>z = row &middot; columns + column</code>
+              <small>The address is now a place in the lattice, not a requirement to materialize every preceding byte.</small>
+            </div>
+          </li>
+
+          <li class="math-step">
+            <span class="math-index">06</span>
+            <div class="math-copy">
+              <h3>Fit each cell locally</h3>
+              <p>Each cell selects the shortest exact explanation available: a constant, repeating period, line, curve, XOR ramp, translated orbit, or literal bytes.</p>
+            </div>
+            <div class="equation" aria-label="Local byte model equations">
+              <code>M<sub>constant</sub>(r) = k</code>
+              <code>M<sub>repeat</sub>(r) = P[r mod |P|]</code>
+              <code>M<sub>linear</sub>(r) = (a + sr) mod 256</code>
+              <code>M<sub>quadratic</sub>(r) = (a + br + cr<sup>2</sup>) mod 256</code>
+              <code>M<sub>xor</sub>(r) = a XOR ((sr) mod 256)</code>
+              <code>M<sub>orbit</sub>(r) = (P[r mod k] + &lfloor;r/k&rfloor;d) mod 256</code>
+            </div>
+          </li>
+
+          <li class="math-step">
+            <span class="math-index">07</span>
+            <div class="math-copy">
+              <h3>Intertwine matching branches</h3>
+              <p>Cells with the same model and the same sparse corrections share one VM branch. The lattice selects that branch wherever the pattern reappears.</p>
+            </div>
+            <div class="equation" aria-label="Branch sharing and correction equations">
+              <code>g(i) = g(j) iff model<sub>i</sub> = model<sub>j</sub> and &Delta;<sub>i</sub> = &Delta;<sub>j</sub></code>
+              <code>F(y) = &Delta;(y), if present; otherwise M<sub>g(cell(y))</sub>(within(y))</code>
+              <small>The correction map stores the requested replacement byte, so the result remains byte-for-byte exact.</small>
+            </div>
+          </li>
+
+          <li class="math-step">
+            <span class="math-index">08</span>
+            <div class="math-copy">
+              <h3>Select the smallest exact encoding</h3>
+              <p>The compiler measures the complete binary, not just the pattern. It keeps geometry only when geometry beats the literal representation.</p>
+            </div>
+            <div class="equation" aria-label="Encoding optimization equation">
+              <code>E* = arg min |FXB1(E)|</code>
+              <code>E &isin; { literal, global model, cell lattice }</code>
+              <code>subject to decode(E)[y] = source[y] for every y</code>
+            </div>
+          </li>
+
+          <li class="math-step">
+            <span class="math-index">09</span>
+            <div class="math-copy">
+              <h3>Place it in an ordinary QR</h3>
+              <p>The final camera link must fit the selected QR version and error-correction level. Small descriptions travel directly; larger exact sources use a short locator.</p>
+            </div>
+            <div class="equation" aria-label="QR fit equation">
+              <code>|cameraURL(FX1)| &le; QRcapacity(version, ECC)</code>
+              <code>FQX1 = (repeat, name, |B|, B), &nbsp; file<sub>t</sub> = B</code>
+              <code>|logical files| = repeat &middot; |B|, &nbsp; H(file<sub>t</sub>) = H(B)</code>
+              <code>logical bytes = generated bytes + stored literals</code>
+              <small>The verified image set stores the original 70,277-byte JPEG once and exposes 1,000 byte-identical files through a version-4 QR link.</small>
+            </div>
+          </li>
+        </ol>
+
+        <dl class="math-proof" aria-label="Verified compiler example">
+          <div><dt>4,096</dt><dd>source bytes</dd></div>
+          <div><dt>16</dt><dd>lattice cells</dd></div>
+          <div><dt>479 bytes</dt><dd>complete FX1 payload</dd></div>
+          <div><dt>Exact</dt><dd>native byte recovery</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="architecture" id="architecture" aria-labelledby="architecture-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">From camera to files</p>
+            <h2 id="architecture-title">Four steps. No mystery.</h2>
+          </div>
+          <p>Your camera handles the QR. FelixFS turns what it reads into a usable drive.</p>
+        </div>
+        <ol class="stage-list">
+          <li><span>Scan</span><p>Use the camera app already on your phone. It reads FelixQR as a normal QR code.</p></li>
+          <li><span>Check</span><p>FelixFS verifies the volume before opening it, so a damaged code is caught immediately.</p></li>
+          <li><span>Generate</span><p>The geometry recreates exactly the bytes needed for the file and position you requested.</p></li>
+          <li><span>Browse</span><p>The result appears as a read-only drive on your phone or computer.</p></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="verification" id="verification" aria-labelledby="verification-title">
+      <div class="section-inner verification-grid">
+        <div class="section-intro">
+          <p class="eyebrow">Already working</p>
+          <h2 id="verification-title">Scanned, opened, and read back.</h2>
+          <p>The complete path has been tested: QR scan, volume check, geometric decoding, exact repeated files, folder browsing, and random access near the end of the 1 TiB sample file.</p>
+        </div>
+        <dl class="verification-stats">
+          <div><dt>10,000</dt><dd>positions checked and recovered</dd></div>
+          <div><dt>Exact</dt><dd>QR payload scan and recovery</dd></div>
+          <div><dt>1 TiB</dt><dd>seekable sample file</dd></div>
+          <div><dt>32 bytes</dt><dd>read successfully near its end</dd></div>
+          <div><dt>1,000 files</dt><dd>byte-identical to the original JPEG</dd></div>
+        </dl>
+      </div>
+      <div class="section-inner platforms" aria-label="Built platforms">
+        <span>Windows x64</span>
+        <span>Linux x64</span>
+        <span>macOS Intel</span>
+        <span>macOS Apple Silicon</span>
+        <span>Android ARM64</span>
+        <span>Android x86-64</span>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>FelixQR</span>
+    <span>Created by <a href="https://github.com/FelixAGI">FelixAGI</a></span>
+    <a class="button tertiary" href="https://ko-fi.com/rammibean" target="_blank" rel="noopener noreferrer">Support FelixQR</a>
+  </footer>
+
+  <script src="link.js?v=4"></script>
+  <script src="qrcode.bundle.js?v=4"></script>
+  <script src="felix-builder-core.js?v=9"></script>
+  <script src="app.js?v=4"></script>
+  <script src="file-manager.js?v=8"></script>
+</body>
+</html>

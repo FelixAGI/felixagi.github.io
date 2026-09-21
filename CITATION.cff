@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use FelixQR, please cite the original project."
+authors:
+  - name: "FelixAGI"
+    website: "https://github.com/FelixAGI"
+title: "FelixQR"
+type: software
+date-released: 2026-09-21
+repository-code: "https://github.com/FelixAGI/felixagi.github.io"
+url: "https://felixagi.github.io/"
+license: MIT

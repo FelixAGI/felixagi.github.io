@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "org.felixqr.felixfs",
+      "sha256_cert_fingerprints": [
+        "E9:E8:11:9E:04:8D:EF:02:9D:39:10:74:4C:30:41:57:FE:BA:07:A7:FB:B1:2C:30:99:20:55:26:75:99:F3:F3"
+      ]
+    }
+  }
+]

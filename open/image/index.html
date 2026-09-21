@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f3f5f2">
+  <title>FelixFS Exact Image Set</title>
+  <link rel="stylesheet" href="image.css?v=4">
+</head>
+<body>
+  <header>
+    <a href="../" aria-label="Back to FelixQR"><span>FQ</span> FelixQR</a>
+    <strong>Exact image volume</strong>
+  </header>
+
+  <main>
+    <section class="intro" aria-labelledby="page-title">
+      <div>
+        <p class="eyebrow">FQX1 exact volume</p>
+        <h1 id="page-title">One image. One thousand files.</h1>
+        <p id="status" aria-live="polite">Reading the exact file set...</p>
+      </div>
+      <dl>
+        <div><dt>Stored once</dt><dd id="model-size">...</dd></div>
+        <div><dt>Files</dt><dd id="file-count">...</dd></div>
+        <div><dt>Exact file bytes</dt><dd id="logical-size">...</dd></div>
+      </dl>
+    </section>
+
+    <section class="workspace" aria-label="Decoded geometric image and procedural directory">
+      <figure>
+        <img id="preview" width="1280" height="720" alt="Exact image decoded from FelixQR">
+        <figcaption>
+          <span>Original 1280 x 720 JPEG, byte-for-byte</span>
+          <button id="save-image" type="button" disabled>Save original JPEG</button>
+        </figcaption>
+      </figure>
+
+      <div class="directory">
+        <div class="directory-head">
+          <div><small>FELIX:</small><strong>/files/</strong></div>
+          <span>Read only</span>
+        </div>
+        <ol id="files" aria-label="Procedurally generated files"></ol>
+        <p>The directory rule generates every name and maps every entry to one shared, exact JPEG.</p>
+      </div>
+    </section>
+
+    <section class="carrier" aria-labelledby="carrier-title">
+      <div>
+        <p class="eyebrow">Ordinary QR carrier</p>
+        <h2 id="carrier-title">Scan the exact file set.</h2>
+        <p>The QR contains a normal web link. FelixFS retrieves one checksummed source file, then exposes one thousand exact, read-only views without storing one thousand copies.</p>
+        <a class="button primary" id="open-app" hidden>Open in FelixFS</a>
+        <button id="save-qr" type="button" disabled>Save QR as PNG</button>
+      </div>
+      <canvas id="qr" width="520" height="520" aria-label="QR code containing the FelixFS image geometry"></canvas>
+    </section>
+  </main>
+
+  <script src="../qrcode.bundle.js?v=4"></script>
+  <script src="image.js?v=3"></script>
+</body>
+</html>
