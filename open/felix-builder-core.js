@@ -8,11 +8,17 @@
 
   class Writer {
     constructor() {
-      this.values = [];
+      this.values = new Uint8Array(1024);
+      this.length = 0;
     }
 
     byte(value) {
-      this.values.push(value & 255);
+      if (this.length === this.values.length) {
+        const grown = new Uint8Array(this.values.length * 2);
+        grown.set(this.values);
+        this.values = grown;
+      }
+      this.values[this.length++] = value & 255;
     }
 
     bytes(values) {
@@ -47,7 +53,7 @@
     }
 
     finish() {
-      return Uint8Array.from(this.values);
+      return this.values.slice(0, this.length);
     }
   }
 
@@ -75,19 +81,11 @@
   }
 
   function base64url(bytes) {
-    const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
-    let output = "";
-    for (let index = 0; index < bytes.length; index += 3) {
-      const length = Math.min(3, bytes.length - index);
-      const value = (bytes[index] << 16)
-        | ((bytes[index + 1] || 0) << 8)
-        | (bytes[index + 2] || 0);
-      output += alphabet[(value >>> 18) & 63];
-      output += alphabet[(value >>> 12) & 63];
-      if (length > 1) output += alphabet[(value >>> 6) & 63];
-      if (length > 2) output += alphabet[value & 63];
+    const chunks = [];
+    for (let index = 0; index < bytes.length; index += 24576) {
+      chunks.push(btoa(String.fromCharCode(...bytes.subarray(index, index + 24576))));
     }
-    return output;
+    return chunks.join("").replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
   }
 
   function safeNames(files) {
