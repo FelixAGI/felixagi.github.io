@@ -38,7 +38,7 @@ dd { margin: 7px 0 0; color: #203029; font-size: 15px; font-weight: 760; }
 
 .workspace { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(300px, .65fr); border-top: 1px solid #cfd7d1; border-bottom: 1px solid #cfd7d1; }
 figure { min-width: 0; margin: 0; padding: 36px 42px 36px 0; }
-#preview { width: 100%; height: auto; display: block; aspect-ratio: 16 / 9; object-fit: contain; background: #101713; }
+#preview { width: 100%; height: auto; display: block; aspect-ratio: auto; object-fit: contain; background: #101713; }
 figcaption { min-height: 54px; display: flex; align-items: end; justify-content: space-between; gap: 18px; color: #66736d; font-size: 12px; }
 
 button, .button { min-height: 40px; padding: 0 15px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid #aeb9b2; border-radius: 4px; background: #fff; color: #26312d; font: inherit; font-size: 12px; font-weight: 720; text-decoration: none; cursor: pointer; }

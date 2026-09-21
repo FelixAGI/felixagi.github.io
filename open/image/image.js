@@ -86,13 +86,18 @@
   }
 
   async function start() {
-    const setName = new URLSearchParams(location.search).get("set") || "owo-1000.fqx";
+    const setName = new URLSearchParams(location.search).get("set") || "goat-1000.fqx";
     const response = await fetch(setName);
     if (!response.ok) throw new Error("The exact Felix image set could not be loaded.");
     const set = parseExactSet(await response.text());
-    const imageUrl = URL.createObjectURL(new Blob([set.bytes], { type: "image/jpeg" }));
-    preview.src = imageUrl;
+    const imageType = set.name.toLowerCase().endsWith(".png") ? "image/png" : "image/jpeg";
+    const imageUrl = URL.createObjectURL(new Blob([set.bytes], { type: imageType }));
     preview.alt = `${set.name}, decoded byte-for-byte from the Felix exact set`;
+    preview.onload = () => {
+      document.querySelector("#image-caption").textContent = `Original ${preview.naturalWidth} x ${preview.naturalHeight} ${imageType === "image/png" ? "PNG" : "JPEG"}, byte-for-byte`;
+    };
+    preview.src = imageUrl;
+    saveImage.textContent = `Save original ${imageType === "image/png" ? "PNG" : "JPEG"}`;
     document.querySelector("#model-size").textContent = formatBytes(set.bytes.length);
     document.querySelector("#logical-size").textContent = formatBytes(set.bytes.length * set.repeatCount);
     renderDirectory(set);
@@ -114,7 +119,7 @@
       color: { dark: "#111714", light: "#ffffff" },
     });
     saveQr.disabled = false;
-    saveQr.addEventListener("click", () => downloadUrl(qr.toDataURL("image/png"), "owo-1000-exact-felixqr.png"));
+    saveQr.addEventListener("click", () => downloadUrl(qr.toDataURL("image/png"), `${set.name.replace(/\.[^.]+$/, "")}-${set.repeatCount}-exact-felixqr.png`));
   }
 
   start().catch((error) => {

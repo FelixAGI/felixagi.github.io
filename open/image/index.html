@@ -29,10 +29,10 @@
 
     <section class="workspace" aria-label="Decoded geometric image and procedural directory">
       <figure>
-        <img id="preview" width="1280" height="720" alt="Exact image decoded from FelixQR">
+        <img id="preview" width="1254" height="1254" alt="Exact image decoded from FelixQR">
         <figcaption>
-          <span>Original 1280 x 720 JPEG, byte-for-byte</span>
-          <button id="save-image" type="button" disabled>Save original JPEG</button>
+          <span id="image-caption">Original image, byte-for-byte</span>
+          <button id="save-image" type="button" disabled>Save original image</button>
         </figcaption>
       </figure>
 
@@ -42,7 +42,7 @@
           <span>Read only</span>
         </div>
         <ol id="files" aria-label="Procedurally generated files"></ol>
-        <p>The directory rule generates every name and maps every entry to one shared, exact JPEG.</p>
+        <p>The directory rule generates every name and maps every entry to one shared, exact image.</p>
       </div>
     </section>
 
@@ -59,6 +59,6 @@
   </main>
 
   <script src="../qrcode.bundle.js?v=4"></script>
-  <script src="image.js?v=3"></script>
+  <script src="image.js?v=4"></script>
 </body>
 </html>
