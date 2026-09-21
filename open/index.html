@@ -126,7 +126,7 @@
               </div>
             </header>
             <p class="output-intro">The exact compiler maps files into 256-byte lattice cells. Each cell chooses its smallest geometry, shares matching branches, and keeps only the corrections.</p>
-            <p class="app-requirement">Install <a href="FelixFS-Android.apk" download>FelixFS for Android</a> once, then use the Open in FelixFS action after scanning.</p>
+            <p class="app-requirement"><a href="FelixFS-Android.apk" download>FelixFS for Android</a> opens scannable codes and saved Felix files.</p>
             <button class="button primary build-button" id="build-felixqr" type="button" disabled>Create FelixQR</button>
 
             <div class="builder-result" id="builder-result" hidden>
@@ -139,10 +139,10 @@
                 <div><dt>Reduced</dt><dd id="result-savings">0 bytes</dd></div>
               </dl>
               <div class="result-actions">
-                <a class="button primary" id="open-built-app" href="">Open in FelixFS</a>
+                <a class="button primary" id="open-built-app" href="" hidden>Open in FelixFS</a>
                 <a class="button secondary" id="download-built-fx1" href="">Save Felix file</a>
                 <button class="button tertiary" id="copy-built-link" type="button" hidden>Copy FelixQR link</button>
-                <a class="button secondary" id="download-built-qr" aria-disabled="true">Save QR as PNG</a>
+                <a class="button secondary" id="download-built-qr" hidden>Save QR as PNG</a>
               </div>
             </div>
           </section>
@@ -485,8 +485,8 @@
 
   <script src="link.js?v=4"></script>
   <script src="qrcode.bundle.js?v=4"></script>
-  <script src="felix-builder-core.js?v=9"></script>
+  <script src="felix-builder-core.js?v=10"></script>
   <script src="app.js?v=4"></script>
-  <script src="file-manager.js?v=8"></script>
+  <script src="file-manager.js?v=10"></script>
 </body>
 </html>

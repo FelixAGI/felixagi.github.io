@@ -24,6 +24,8 @@ if (builder) {
   const copyLink = document.querySelector("#copy-built-link");
   const downloadQr = document.querySelector("#download-built-qr");
   const canvas = document.querySelector("#built-qr");
+  const maxQrBytes = 2953;
+  const maxAndroidPayloadBytes = 16 * 1024 * 1024;
   let records = [];
   let fx1Url = null;
 
@@ -46,11 +48,22 @@ if (builder) {
     const database = await openDatabase();
     return new Promise((resolve, reject) => {
       const transaction = database.transaction(storeName, mode);
-      const request = operation(transaction.objectStore(storeName));
-      request.onsuccess = () => resolve(request.result);
-      request.onerror = () => reject(request.error);
-      transaction.oncomplete = () => database.close();
-      transaction.onerror = () => reject(transaction.error);
+      let request;
+      try {
+        request = operation(transaction.objectStore(storeName));
+      } catch (error) {
+        database.close();
+        reject(error);
+        return;
+      }
+      transaction.oncomplete = () => {
+        database.close();
+        resolve(request.result);
+      };
+      transaction.onabort = () => {
+        database.close();
+        reject(transaction.error || request.error || new Error("Browser storage failed."));
+      };
     });
   }
 
@@ -60,8 +73,10 @@ if (builder) {
     result.hidden = true;
     canvas.hidden = true;
     copyLink.hidden = true;
+    openBuiltApp.hidden = true;
+    downloadQr.hidden = true;
+    downloadFx1.className = "button secondary";
     downloadQr.removeAttribute("href");
-    downloadQr.setAttribute("aria-disabled", "true");
   }
 
   function render() {
@@ -133,7 +148,9 @@ if (builder) {
     try {
       await addFiles(files);
     } catch (error) {
-      builderMessage.textContent = `Could not save those files: ${error.message}`;
+      builderMessage.textContent = error.name === "QuotaExceededError"
+        ? "This browser has run out of local storage. Remove saved files or free up device space, then try again. Nothing was uploaded."
+        : `Could not save those files in this browser: ${error.message}`;
     }
   });
 
@@ -148,7 +165,9 @@ if (builder) {
   buildButton.addEventListener("click", async () => {
     resetResult();
     builderMessage.textContent = "Building your FelixQR locally...";
+    buildButton.disabled = true;
     try {
+      await new Promise((resolve) => setTimeout(resolve, 0));
       const encoded = FelixBuilder.encodeVolume(records.map((file) => ({
         name: file.name,
         bytes: new Uint8Array(file.bytes),
@@ -157,8 +176,7 @@ if (builder) {
       fx1Url = URL.createObjectURL(fx1Blob);
       downloadFx1.href = fx1Url;
       downloadFx1.download = "my-files.fx1";
-      openBuiltApp.href = FelixLink.appUrl(encoded.payload);
-      resultSize.textContent = formatBytes(new TextEncoder().encode(encoded.payload).length);
+      resultSize.textContent = formatBytes(encoded.payload.length);
       resultFiles.textContent = `${records.length}`;
       resultEncoding.textContent = encoded.gridFiles
         ? encoded.gridFiles === 1 ? "Cell lattice" : `${encoded.gridFiles} cell lattices`
@@ -168,31 +186,44 @@ if (builder) {
         : "0 bytes";
       result.hidden = false;
 
-      const configuredBase = document.querySelector('meta[name="felix-phone-base"]')?.content;
-      const loopback = location.hostname === "127.0.0.1" || location.hostname === "localhost";
-      const cameraBase = loopback && configuredBase ? configuredBase : location.href;
-      const link = FelixLink.cameraUrl(encoded.payload, cameraBase);
-      copyLink.dataset.link = link;
-      try {
-        await QRCode.toCanvas(canvas, link, {
-          errorCorrectionLevel: "L",
-          margin: 4,
-          width: 520,
-          color: { dark: "#111714", light: "#ffffff" },
-        });
-        canvas.hidden = false;
-        copyLink.hidden = false;
-        downloadQr.href = canvas.toDataURL("image/png");
-        downloadQr.download = "my-felixqr.png";
-        downloadQr.removeAttribute("aria-disabled");
-        resultMessage.textContent = "Your exact FelixQR is ready. The compiler used procedural geometry wherever it made the payload smaller.";
-      } catch (error) {
-        resultMessage.textContent = "The exact compiler used the smallest representation it found, but this collection still exceeds one standard QR. Save the Felix file or remove files.";
-        console.warn("FelixQR rendering failed", error);
+      let qrReady = false;
+      if (encoded.payload.length <= maxQrBytes) {
+        const configuredBase = document.querySelector('meta[name="felix-phone-base"]')?.content;
+        const loopback = location.hostname === "127.0.0.1" || location.hostname === "localhost";
+        const cameraBase = loopback && configuredBase ? configuredBase : location.href;
+        const link = FelixLink.cameraUrl(encoded.payload, cameraBase);
+        try {
+          await QRCode.toCanvas(canvas, link, {
+            errorCorrectionLevel: "L",
+            margin: 4,
+            width: 520,
+            color: { dark: "#111714", light: "#ffffff" },
+          });
+          copyLink.dataset.link = link;
+          openBuiltApp.href = FelixLink.appUrl(encoded.payload);
+          downloadQr.href = canvas.toDataURL("image/png");
+          downloadQr.download = "my-felixqr.png";
+          qrReady = true;
+        } catch (error) {
+          console.warn("FelixQR rendering failed", error);
+        }
       }
+      canvas.hidden = !qrReady;
+      copyLink.hidden = !qrReady;
+      openBuiltApp.hidden = !qrReady;
+      downloadQr.hidden = !qrReady;
+      downloadFx1.className = qrReady ? "button secondary" : "button primary";
+      const exactFiles = `${records.length} ${records.length === 1 ? "file is" : "files are"} preserved exactly`;
+      resultMessage.textContent = qrReady
+        ? `${exactFiles}. Your scannable FelixQR is ready.`
+        : encoded.payload.length + 1 > maxAndroidPayloadBytes
+          ? `${exactFiles} in a Felix file, but it exceeds the current Android app's 16 MiB import limit. Save it locally, or use fewer files for Android.`
+          : `${exactFiles} in a Felix file. This collection is too large for one QR; save the Felix file to open it in FelixFS.`;
       builderMessage.textContent = "Built entirely in this browser. Nothing was uploaded.";
     } catch (error) {
       builderMessage.textContent = `Could not build this FelixQR: ${error.message}`;
+    } finally {
+      buildButton.disabled = records.length === 0;
     }
   });
 

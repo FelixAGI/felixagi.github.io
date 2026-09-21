@@ -143,9 +143,14 @@
   }
 
   function angularSize(bytes) {
-    const writer = new Writer();
-    putContent(writer, { kind: "angular", bytes });
-    return writer.finish().length;
+    let length = bytes.length;
+    let size = 4;
+    while (length >= 128) {
+      size += 1;
+      length = Math.floor(length / 128);
+    }
+    for (const byte of bytes) size += byte < 128 ? 1 : 2;
+    return size;
   }
 
   function exactPeriod(bytes) {
@@ -468,16 +473,6 @@
     return `${model}|${corrections}`;
   }
 
-  function groupCells(cells) {
-    const groups = new Map();
-    cells.forEach((cell, index) => {
-      const key = modelKey(cell);
-      if (!groups.has(key)) groups.set(key, { model: cell, indices: [] });
-      groups.get(key).indices.push(index);
-    });
-    return Array.from(groups.values());
-  }
-
   function compileGridModel(builder, local, candidate) {
     const cellSize = builder.add(0, CELL_BYTES);
     const cell = builder.add(9, local, cellSize);
@@ -508,23 +503,29 @@
 
   function compileGrid(bytes, ceiling) {
     const cells = [];
+    const grouped = new Map();
+    let roughInstructions = 4;
     for (let start = 0; start < bytes.length; start += CELL_BYTES) {
       const cellBytes = bytes.subarray(start, Math.min(start + CELL_BYTES, bytes.length));
       const compiled = compileGlobal(cellBytes);
       const cell = compiled.kind === "procedural" ? compiled : literalCellModel(cellBytes);
       cells.push(cell);
+      const key = modelKey(cell);
+      let group = grouped.get(key);
+      if (!group) {
+        group = { model: cell, indices: [] };
+        grouped.set(key, group);
+        roughInstructions += modelInstructionCount(cell);
+      }
+      group.indices.push(cells.length - 1);
+      roughInstructions += 3;
+      if (roughInstructions * 3 >= ceiling) return null;
     }
-    const groups = groupCells(cells);
-    const roughInstructions = groups.reduce(
-      (total, group) => total + modelInstructionCount(group.model) + 3 * group.indices.length,
-      4,
-    );
-    if (roughInstructions * 3 >= ceiling) return null;
     const candidate = {
       kind: "grid",
       bytes,
       cells,
-      groups,
+      groups: Array.from(grouped.values()),
       label: `${cells.length}-cell geometric lattice`,
     };
     candidate.estimatedBytes = gridCandidateSize(candidate, bytes.length);
