@@ -13,8 +13,8 @@ project using [CITATION.cff](CITATION.cff) when you build on it.
 
 [Support FelixQR](https://ko-fi.com/rammibean)
 
-The exact-image demonstration stores `owo.jpg` once and exposes 1,000
-byte-identical files, totaling 67 MiB of logical file contents. Its QR is a
+The exact-image demonstration stores `goat.png` once and exposes 1,000
+byte-identical files, totaling 2.12 GiB of logical file contents. Its QR is a
 standard version-4 symbol and independently decodes to the permanent HTTPS
 address.
 
@@ -48,8 +48,8 @@ QR rendering uses the MIT-licensed `qrcode` package; its license is included
 beside the browser bundle.
 
 The exact image demonstration lives at `/open/image/`. Its ordinary QR carries
-a short HTTPS locator to `owo-1000.fqx`; FelixFS validates that FQX1 envelope
-and exposes 1,000 byte-identical JPEG entries from one stored source. The host
+a short HTTPS locator to `goat-1000.fqx`; FelixFS validates that FQX1 envelope
+and exposes 1,000 byte-identical PNG entries from one stored source. The host
 root redirects to `/open/`, and `.nojekyll` publishes the prebuilt static files
 unchanged.
 
