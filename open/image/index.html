@@ -4,30 +4,52 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#f3f5f2">
-  <title>FelixFS Exact Image Set</title>
-  <link rel="stylesheet" href="image.css?v=4">
+  <title>FelixQR Capacity Demo</title>
+  <link rel="stylesheet" href="image.css?v=5">
 </head>
 <body>
   <header>
     <a href="../" aria-label="Back to FelixQR"><span>FQ</span> FelixQR</a>
-    <strong>Exact image volume</strong>
+    <nav aria-label="On this page">
+      <a href="#demo">Demo</a>
+      <a href="#capacity">Capacity</a>
+      <a href="#mathematics">Mathematics</a>
+      <a href="#build">Build</a>
+    </nav>
   </header>
 
   <main>
-    <section class="intro" aria-labelledby="page-title">
+    <section class="intro" id="demo" aria-labelledby="page-title">
       <div>
-        <p class="eyebrow">FQX1 exact volume</p>
-        <h1 id="page-title">One image. One thousand files.</h1>
+        <p class="eyebrow">FelixQR / exact file set</p>
+        <h1 id="page-title">One scan opens exact files.</h1>
         <p id="status" aria-live="polite">Reading the exact file set...</p>
       </div>
       <dl>
-        <div><dt>Stored once</dt><dd id="model-size">...</dd></div>
+        <div><dt>Exact file contents</dt><dd id="logical-size">...</dd></div>
         <div><dt>Files</dt><dd id="file-count">...</dd></div>
-        <div><dt>Exact file bytes</dt><dd id="logical-size">...</dd></div>
+        <div><dt>Stored once</dt><dd id="model-size">...</dd></div>
+        <div><dt>Carrier</dt><dd>1 QR</dd></div>
       </dl>
     </section>
 
-    <section class="workspace" aria-label="Decoded geometric image and procedural directory">
+    <section class="capacity-proof" id="capacity" aria-labelledby="capacity-title">
+      <div class="capacity-proof-head">
+        <div>
+          <p class="eyebrow">Separate verified geometric sample</p>
+          <h2 id="capacity-title">A drive you can seek through.</h2>
+          <p>These figures belong to FelixQR's geometric sample, not the image set above. FelixFS generates only the bytes requested.</p>
+        </div>
+        <a href="../felix-sample.fx1" download>Get the sample Felix file</a>
+      </div>
+      <dl>
+        <div><dt>Seekable file</dt><dd>1 TiB</dd><small>Read near its end without generating the whole file</small></div>
+        <div><dt>Addressable output</dt><dd>2<sup>98</sup> bytes</dd><small>4 channels across 24 axes of 16 states</small></div>
+        <div><dt>Verified dimensions</dt><dd>24</dd><small>Additional dimensions use the same addressing rule</small></div>
+      </dl>
+    </section>
+
+    <section class="workspace" aria-label="Exact image and procedural directory">
       <figure>
         <img id="preview" width="1254" height="1254" alt="Exact image decoded from FelixQR">
         <figcaption>
@@ -46,19 +68,55 @@
       </div>
     </section>
 
-    <section class="carrier" aria-labelledby="carrier-title">
+    <section class="mathematics" id="mathematics" aria-labelledby="mathematics-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">The mathematics</p>
+          <h2 id="mathematics-title">From a coordinate to an exact byte.</h2>
+        </div>
+        <p>FX1 is a compact description of a deterministic read-only volume. The geometry creates addressable output; literal bytes and corrections preserve files exactly where a rule alone cannot.</p>
+      </div>
+      <div class="math-grid">
+        <div><h3>Package</h3><code>FX1 | base64url(FXB1) | crc32(FXB1)</code><p>FXB1 holds the file tree, geometry, VM program, and any required literal bytes.</p></div>
+        <div><h3>Address space</h3><code>N = q &times; &prod; n<sub>j</sub></code><code>4 &times; 16<sup>24</sup> = 2<sup>98</sup> byte addresses</code><p>q is the channel count; each axis contributes its own number of states.</p></div>
+        <div><h3>Coordinates</h3><code>c = A mod q; &nbsp; p = &lfloor;A / q&rfloor;</code><code>x<sub>j</sub> = p mod n<sub>j</sub>; &nbsp; p = &lfloor;p / n<sub>j</sub>&rfloor;</code><p>Iterating over the axes locates the requested channel and position without enumerating earlier bytes.</p></div>
+        <div><h3>Rotation</h3><code>&theta;(s, r) = 2&pi;s / r</code><code>b = (s<sub>high</sub> &lt;&lt; 4) | s<sub>low</sub></code><p>Angular states are a representation of byte values, not extra information inserted into a QR.</p></div>
+        <div><h3>Exact file compiler</h3><code>cell(y) = &lfloor;y / 256&rfloor;</code><code>F(y) = &Delta;(y) if present; otherwise M<sub>cell(y)</sub>(y mod 256)</code><p>Each cell can use a repeat, line, curve, XOR ramp, orbit, or exact literal. Matching models share branches.</p></div>
+        <div><h3>This image set</h3><code>file<sub>t</sub> = B, &nbsp; t = 1 ... repeat</code><code>logical bytes = repeat &times; |B|</code><p>FQX1 stores the PNG once. Its QR carries a short link to the bundled, checksummed set.</p></div>
+      </div>
+      <p class="math-footnote">The decoder must reproduce every requested byte. A larger address space is not the same as storing that many independent bytes inside the QR.</p>
+    </section>
+
+    <section class="build" id="build" aria-labelledby="build-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Make it yourself</p>
+          <h2 id="build-title">Source, specification, and tests.</h2>
+        </div>
+        <p>The source package includes the Rust core, CLI, filesystem adapters, Android app source, protocol specification, and verification tests. It does not include a signing key or anyone's files.</p>
+      </div>
+      <div class="build-links">
+        <a href="../../felixfs-source.zip" download><strong>Download complete source</strong><span>Rust, Android, adapters, tests, and build guide</span></a>
+        <a href="https://github.com/FelixAGI/felixagi.github.io/blob/main/FELIXFS-SPEC.md"><strong>Read the FX1/FQX1 specification</strong><span>Binary layout, addressing, and decoding rules</span></a>
+        <a href="https://github.com/FelixAGI/felixagi.github.io/blob/main/BUILD.md"><strong>Build and verify</strong><span>Required tools, commands, and test procedure</span></a>
+      </div>
+      <p class="source-note">The browser builder and QR bridge are in the <a href="https://github.com/FelixAGI/felixagi.github.io">public site source</a>.</p>
+      <p class="build-command"><code>cargo test</code><code>cargo run -- demo demo</code></p>
+    </section>
+
+    <section class="carrier" id="scan" aria-labelledby="carrier-title">
       <div>
         <p class="eyebrow">Ordinary QR carrier</p>
         <h2 id="carrier-title">Scan the exact file set.</h2>
-        <p>The QR contains a normal web link. FelixFS retrieves one checksummed source file, then exposes one thousand exact, read-only views without storing one thousand copies.</p>
+        <p>The QR contains a normal web link to this bundled demo file. FelixFS checks the source, then exposes the original bytes through read-only files. Visitor files are never hosted here.</p>
         <a class="button primary" id="open-app" hidden>Open in FelixFS</a>
         <button id="save-qr" type="button" disabled>Save QR as PNG</button>
       </div>
-      <canvas id="qr" width="520" height="520" aria-label="QR code containing the FelixFS image geometry"></canvas>
+      <canvas id="qr" width="520" height="520" aria-label="QR code linking to the FelixQR exact image demonstration"></canvas>
     </section>
   </main>
 
   <script src="../qrcode.bundle.js?v=4"></script>
-  <script src="image.js?v=4"></script>
+  <script src="image.js?v=5"></script>
 </body>
 </html>

@@ -68,11 +68,19 @@
     shown.forEach((index, position) => {
       if (position === first.length && last.length) {
         const gap = document.createElement("li");
-        gap.innerHTML = "<em>...</em><span>procedural entries</span>";
+        const ellipsis = document.createElement("em");
+        ellipsis.textContent = "...";
+        const description = document.createElement("span");
+        description.textContent = "procedural entries";
+        gap.append(ellipsis, description);
         files.append(gap);
       }
       const item = document.createElement("li");
-      item.innerHTML = `<strong>${repeatedName(set.name, index, width)}</strong><span>exact</span>`;
+      const name = document.createElement("strong");
+      name.textContent = repeatedName(set.name, index, width);
+      const exact = document.createElement("span");
+      exact.textContent = "exact";
+      item.append(name, exact);
       files.append(item);
     });
     document.querySelector("#file-count").textContent = set.repeatCount.toLocaleString();
@@ -87,6 +95,7 @@
 
   async function start() {
     const setName = new URLSearchParams(location.search).get("set") || "goat-1000.fqx";
+    if (!/^[a-z0-9-]+\.fqx$/.test(setName)) throw new Error("Choose a bundled Felix image set.");
     const response = await fetch(setName);
     if (!response.ok) throw new Error("The exact Felix image set could not be loaded.");
     const set = parseExactSet(await response.text());
@@ -100,6 +109,7 @@
     saveImage.textContent = `Save original ${imageType === "image/png" ? "PNG" : "JPEG"}`;
     document.querySelector("#model-size").textContent = formatBytes(set.bytes.length);
     document.querySelector("#logical-size").textContent = formatBytes(set.bytes.length * set.repeatCount);
+    document.querySelector("#page-title").textContent = `One scan opens ${formatBytes(set.bytes.length * set.repeatCount)}.`;
     renderDirectory(set);
 
     const digest = new Uint8Array(await crypto.subtle.digest("SHA-256", set.bytes));
