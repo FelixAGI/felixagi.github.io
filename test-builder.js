@@ -82,6 +82,19 @@ const noise = Uint8Array.from({ length: 4096 }, () => {
 });
 assert.equal(compileBytes(noise).kind, "literal");
 
+let photoState = 23;
+const photoBytes = Uint8Array.from({ length: 70_277 }, () => {
+  photoState = (photoState * 1664525 + 1013904223) >>> 0;
+  return photoState >>> 24;
+});
+const photos = encodeVolume([1, 2, 3].map((index) => ({
+  name: `photo-${index}.jpg`,
+  bytes: photoBytes,
+})));
+assert.equal(photos.sourceBytes, 3 * photoBytes.length);
+assert.deepEqual(photos.modes, ["literal exact", "literal exact", "literal exact"]);
+assert.ok(photos.payload.length > 2953);
+
 const procedural = encodeVolume([{ name: "pattern.bin", bytes: repeated }]);
 assert.equal(procedural.proceduralFiles, 1);
 assert.ok(procedural.savedBytes > 4000);

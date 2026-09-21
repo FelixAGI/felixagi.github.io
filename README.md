@@ -40,10 +40,12 @@ The web bridge has no network runtime dependencies. It can also load pasted
 FelixQR links, raw FX1 payloads, and local `.fx1` files. `node test-link.js`
 runs its link-format checks.
 
-The local file manager stores selected files in browser IndexedDB and encodes
-them into a literal-file FelixFS volume without uploading them. Small volumes
-can be rendered as an ordinary QR; every volume can be saved as `.fx1` and
-opened in FelixFS. `node test-builder.js` checks the browser-side FX1 encoder.
+The live site is a static demo, not a file-hosting service. The local file
+manager stores selected files in browser IndexedDB and builds exact FelixFS
+volumes without uploading them. Small results can be rendered as ordinary QR
+images; larger results can be saved locally as `.fx1` files. The Android app
+currently accepts `.fx1` imports up to 16 MiB. `node test-builder.js` checks
+the browser-side FX1 encoder.
 QR rendering uses the MIT-licensed `qrcode` package; its license is included
 beside the browser bundle.
 
